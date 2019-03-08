@@ -14,8 +14,12 @@ const drawDiv = _ => {
   })
   return draw
 }
+socket.on('out', function() {
+  console.log('out of cards')
+})
 socket.on('start', function(deck) {
   document.querySelector('.deck').innerText = ''
+  document.querySelector('#start').innerText = 'RESTART'
   document.querySelector('.hand').innerText = ''
   const draw = drawDiv()
   deck.map(card => {

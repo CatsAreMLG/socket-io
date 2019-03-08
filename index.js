@@ -13,6 +13,7 @@ app.use('/static', express.static('static'))
 
 let num = 0
 let players = []
+let newDeck = [...deck]
 
 io.on('connection', function(socket) {
   players.push({ id: socket.id, hand: [] })
@@ -24,23 +25,22 @@ io.on('connection', function(socket) {
     console.log('user disconnected')
   })
   socket.on('start', function() {
-    io.emit('start', deck.shuffle())
+    newDeck = [...deck]
+    newDeck.shuffle()
+    io.emit('start', newDeck)
     const player = players.find(user => user.id === this.id)
     player.hand = []
   })
   socket.on('draw', function() {
-    const player = players.find(user => user.id === this.id)
-    player.hand.push(deck.pop())
-    io.emit('draw', player.hand)
-    io.emit('refresh', deck)
-  })
-  socket.on('increment', function() {
-    num += 1
-    io.emit('increment', num)
-  })
-  socket.on('decrement', function() {
-    num -= 1
-    io.emit('decrement', num)
+    if (newDeck.length > 0) {
+      const player = players.find(user => user.id === this.id)
+      player.hand.push(newDeck.pop())
+      io.to(this.id).emit('draw', player.hand)
+      io.emit('refresh', newDeck)
+      if (newDeck.length > 0) {
+        io.emit('out', true)
+      }
+    }
   })
 })
 
