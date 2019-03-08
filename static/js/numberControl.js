@@ -16,6 +16,7 @@ const drawDiv = _ => {
 }
 socket.on('start', function(deck) {
   document.querySelector('.deck').innerText = ''
+  document.querySelector('.hand').innerText = ''
   const draw = drawDiv()
   deck.map(card => {
     let div = document.createElement('div')
@@ -42,5 +43,13 @@ socket.on('refresh', function(deck) {
   })
 })
 socket.on('draw', function(hand) {
-  console.log(hand)
+  document.querySelector('.hand').innerText = ''
+  hand.map(card => {
+    let div = document.createElement('div')
+    div.classList.add(
+      card.suit == 'Diamonds' || card.suit == 'Hearts' ? 'red' : 'black'
+    )
+    div.innerText = `${card.number} of ${card.suit}`
+    document.querySelector('.hand').appendChild(div)
+  })
 })

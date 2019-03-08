@@ -25,6 +25,8 @@ io.on('connection', function(socket) {
   })
   socket.on('start', function() {
     io.emit('start', deck.shuffle())
+    const player = players.find(user => user.id === this.id)
+    player.hand = []
   })
   socket.on('draw', function() {
     const player = players.find(user => user.id === this.id)
