@@ -15,9 +15,22 @@ const drawDiv = _ => {
   return draw
 }
 socket.on('start', function(deck) {
-  console.log(deck)
   document.querySelector('.deck').innerText = ''
   const draw = drawDiv()
+  deck.map(card => {
+    let div = document.createElement('div')
+    if (!document.querySelector('#draw')) {
+      document.querySelector('.button_container').appendChild(draw)
+    }
+    div.classList.add(
+      card.suit == 'Diamonds' || card.suit == 'Hearts' ? 'red' : 'black'
+    )
+    div.innerText = `${card.number} of ${card.suit}`
+    document.querySelector('.deck').appendChild(div)
+  })
+})
+socket.on('refresh', function(deck) {
+  document.querySelector('.deck').innerText = ''
   deck.map(card => {
     let div = document.createElement('div')
     document.querySelector('.button_container').appendChild(draw)
