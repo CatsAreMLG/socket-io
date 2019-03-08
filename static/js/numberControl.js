@@ -9,6 +9,9 @@ socket.on('start', function(deck) {
   document.querySelector('.deck').innerText = ''
   deck.map(card => {
     let div = document.createElement('div')
+    div.classList.add(
+      card.suit == 'Diamonds' || card.suit == 'Hearts' ? 'red' : 'black'
+    )
     div.innerText = `${card.number} of ${card.suit}`
     document.querySelector('.deck').appendChild(div)
   })
