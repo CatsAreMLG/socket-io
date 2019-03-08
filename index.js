@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
+const { deck } = require('./static/js/cards')
+const { shuffle } = require('./static/js/functions')
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html')
@@ -15,6 +17,9 @@ io.on('connection', function(socket) {
   console.log('a user connected')
   socket.on('disconnect', function() {
     console.log('user disconnected')
+  })
+  socket.on('start', function() {
+    io.emit('start', deck.shuffle())
   })
   socket.on('increment', function() {
     num += 1
